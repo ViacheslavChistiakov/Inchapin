@@ -17,6 +17,7 @@
     "@babel/preset-env": "^7.26.0",
     "browser-sync": "^3.0.3",
     "browserify": "^17.0.1",
+    "browserify-shim": "^3.8.16",
     "gh-pages": "^6.2.0",
     "gulp": "^5.0.0",
     "gulp-babel": "^8.0.0",
@@ -34,5 +35,8 @@
   },
   "dependencies": {
     "gulp-debug": "^5.0.1"
-  }
+  },
+  "browserify": {
+  "transform": ["browserify-shim"]
+}
 }
