@@ -1,6 +1,6 @@
 import { src, dest, watch, series, parallel } from 'gulp';
 import gulpSass from 'gulp-sass';
-import sass from 'sass';
+import * as sass from 'sass';
 import clean from 'gulp-clean';
 import uglify from 'gulp-uglify';
 import htmlmin from 'gulp-htmlmin';
@@ -101,3 +101,5 @@ const _cleanDist = cleanDist;
 export { _cleanDist as cleanDist };
 const _deploy = deploy;
 export { _deploy as deploy };
+
+
