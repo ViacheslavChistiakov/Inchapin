@@ -8,6 +8,7 @@ import concat from 'gulp-concat';
 import cleanCSS from 'gulp-clean-css';
 import browserSyncModule from 'browser-sync';
 import ghPages from 'gulp-gh-pages';
+import babel from 'gulp-babel';
 
 
 const browserSync = browserSyncModule.create();
@@ -38,6 +39,9 @@ function compileAndBundleCSS() {
 // Bundle and minify JavaScript files
 function bundleJS() {
     return src('./*.js',)
+     .pipe(babel({
+        presets: ['@babel/preset-env'], 
+    }))
         .pipe(concat('bundle.js')) 
         .pipe(uglify()) 
         .pipe(dest('./dist/js')); 
