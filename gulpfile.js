@@ -147,14 +147,14 @@ function bundleJS() {
 
 // Copy static assets (e.g., images)
 function copyAssets() {
-    return src('./assets/**/*', { allowEmpty: true })
+    return src('./assets/**/*', { encoding: false })
         .pipe(dest('./dist/assets'))
         .on('error', (err) => console.error('Error in copyAssets task:', err));
 }
 
 // Deploy to GitHub Pages
 function deploy() {
-    return src('./dist/**/*', { allowEmpty: true }).pipe(ghPages());
+    return src('./dist/**/*', { encoding: false }).pipe(ghPages());
 }
 
 // Start a local server
