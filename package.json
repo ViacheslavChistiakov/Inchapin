@@ -3,7 +3,6 @@
   "homepage": "https://viacheslavchistiakov.github.io/Inchapin/",
   "version": "1.0.0",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "deploy": "gulp deploy",
     "test": "echo \"Error: no test specified\" && exit 1",

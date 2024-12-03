@@ -1,18 +1,13 @@
-import { src, dest, watch, series, parallel } from 'gulp';
-import gulpSass from 'gulp-sass';
-import * as sass from 'sass';
-import clean from 'gulp-clean';
-import uglify from 'gulp-uglify';
-import htmlmin from 'gulp-htmlmin';
-import concat from 'gulp-concat';
-import cleanCSS from 'gulp-clean-css';
-import browserSyncModule from 'browser-sync';
-import ghPages from 'gulp-gh-pages';
-import babel from 'gulp-babel';
+const { src, dest, watch, series, parallel } = require('gulp');
+const sass = require('gulp-sass')(require('sass'));
+const clean = require('gulp-clean');
+const uglify = require('gulp-uglify');
+const htmlmin = require('gulp-htmlmin');
+const concat = require('gulp-concat');
+const cleanCSS = require('gulp-clean-css');
+const browserSync = require('browser-sync').create();
+const ghPages = require('gulp-gh-pages');
 
-
-const browserSync = browserSyncModule.create();
-const gulpSassInstance = gulpSass(sass);
 
 // Clean the `dist` folder
 function cleanDist() {
@@ -29,7 +24,7 @@ function copyHTML() {
 // Compile SCSS into CSS, bundle, and minify
 function compileAndBundleCSS() {
     return src('./*.scss')
-        .pipe(gulpSassInstance().on('error', gulpSassInstance.logError))
+        .pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
         .pipe(concat('styles.min.css'))
         .pipe(cleanCSS())
         .pipe(dest('./dist/css'))
@@ -39,9 +34,6 @@ function compileAndBundleCSS() {
 // Bundle and minify JavaScript files
 function bundleJS() {
     return src('./*.js',)
-     .pipe(babel({
-        presets: ['@babel/preset-env'], 
-    }))
         .pipe(concat('bundle.js')) 
         .pipe(uglify()) 
         .pipe(dest('./dist/js')); 
@@ -92,14 +84,11 @@ const build = series(
 
 // Default task to build and start the server
 const _default = series(build, startServer, watchFiles);
-export { _default as default };
+exports.default = _default;
 
 // Export individual tasks
-const _build = build;
-export { _build as build };
-const _cleanDist = cleanDist;
-export { _cleanDist as cleanDist };
-const _deploy = deploy;
-export { _deploy as deploy };
+exports.build = build;
+exports.cleanDist = cleanDist;
+exports.deploy = deploy;
 
 
