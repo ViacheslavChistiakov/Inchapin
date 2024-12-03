@@ -1,4 +1,4 @@
-const { src, dest, watch, series, parallel } = require('gulp');
+const gulp = require('gulp');
 const sass = require('gulp-sass')(require('sass'));
 const clean = require('gulp-clean');
 const uglify = require('gulp-uglify');
@@ -6,7 +6,18 @@ const htmlmin = require('gulp-htmlmin');
 const concat = require('gulp-concat');
 const cleanCSS = require('gulp-clean-css');
 const browserSync = require('browser-sync').create();
+const source = require('vinyl-source-stream');
+const browserify = require('browserify');
 const ghPages = require('gulp-gh-pages');
+
+const { src, dest, watch, series, parallel } = gulp;
+
+gulp.task('scripts', gulp.series(function () {
+    return browserify('./main.js')
+      .bundle()
+      .pipe(source('bundle.js'))
+      .pipe(gulp.dest('dist/js'));
+  }));
 
 
 // Clean the `dist` folder
