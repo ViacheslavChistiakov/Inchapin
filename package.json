@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "deploy": "gh-pages -d dist",
+    "deploy": "gulp deploy",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "gulp build",
     "dev": "gulp"
@@ -20,6 +20,7 @@
     "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",
     "gulp-connect": "^5.7.0",
+    "gulp-gh-pages": "^0.5.4",
     "gulp-htmlmin": "^5.0.1",
     "gulp-imagemin": "^9.1.0",
     "gulp-sass": "^6.0.0",

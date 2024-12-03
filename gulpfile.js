@@ -6,7 +6,21 @@ const htmlmin = require('gulp-htmlmin');
 const concat = require('gulp-concat');
 const cleanCSS = require('gulp-clean-css');
 const browserSync = require('browser-sync').create();
+const gulp = require('gulp');
+const ghPages = require('gulp-gh-pages');
 
+
+
+gulp.task('build', (done) => {
+    console.log('Building project...');
+    done(); 
+  });
+
+  gulp.task('deploy', () => {
+    return gulp
+      .src('./dist/**/*', { encoding: false }) 
+      .pipe(ghPages());
+  });
 
 
 
