@@ -1,3 +1,13 @@
+import Inputmask from "inputmask";
+
+document.addEventListener("DOMContentLoaded", () => {
+  const phoneInput = document.getElementById("phone");
+
+  const phoneMask = new Inputmask("+7 (999) 999-9999");
+  phoneMask.mask(phoneInput);
+});
+
+
 const h2 = document.getElementsByClassName('title-menu')[0];
 const menuButton = document.querySelector('.burger .menu-button');
 

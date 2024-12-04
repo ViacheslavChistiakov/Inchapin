@@ -3,6 +3,7 @@
   "homepage": "https://viacheslavchistiakov.github.io/Inchapin/",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "deploy": "gulp deploy",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -15,11 +16,12 @@
   "devDependencies": {
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
+    "babelify": "^10.0.0",
     "browser-sync": "^3.0.3",
     "browserify": "^17.0.1",
     "browserify-shim": "^3.8.16",
     "gh-pages": "^6.2.0",
-    "gulp": "^5.0.0",
+    "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
     "gulp-clean": "^0.4.0",
     "gulp-clean-css": "^4.3.0",
@@ -31,12 +33,19 @@
     "gulp-sass": "^6.0.0",
     "gulp-uglify": "^3.0.2",
     "imagemin-pngquant": "^10.0.0",
+    "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
-    "gulp-debug": "^5.0.1"
+    "gulp-debug": "^5.0.1",
+    "inputmask": "^5.0.9"
   },
   "browserify": {
-  "transform": ["browserify-shim"]
-}
+    "transform": [
+      "browserify-shim"
+    ]
+  },
+  "browserify-shim": {
+    "module-name": "global:ModuleName"
+  }
 }

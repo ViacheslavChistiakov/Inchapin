@@ -1,28 +1,50 @@
-const gulp = require('gulp');
-const sass = require('gulp-sass')(require('sass'));
-const clean = require('gulp-clean');
-const uglify = require('gulp-uglify');
-const htmlmin = require('gulp-htmlmin');
-const concat = require('gulp-concat');
-const cleanCSS = require('gulp-clean-css');
-const browserSync = require('browser-sync').create();
-const source = require('vinyl-source-stream');
-const browserify = require('browserify');
-const ghPages = require('gulp-gh-pages');
+import gulp from 'gulp';
+import clean from 'gulp-clean';
+import uglify from 'gulp-uglify';
+import gulpSass from 'gulp-sass';
+import * as dartSass from 'sass';
+import htmlmin from 'gulp-htmlmin';
+import concat from 'gulp-concat';
+import cleanCSS from 'gulp-clean-css';
+import browserSyncLib from 'browser-sync';
+import source from 'vinyl-source-stream';
+import browserify from 'browserify';
+import babelify from 'babelify';
+import ghPages from 'gulp-gh-pages';
+import buffer from 'vinyl-buffer';
+import sourcemaps from 'gulp-sourcemaps';
 
-const { src, dest, watch, series, parallel } = gulp;
-
-gulp.task('scripts', gulp.series(function () {
-    return browserify('./main.js')
-      .bundle()
-      .pipe(source('bundle.js'))
-      .pipe(gulp.dest('dist/js'));
-  }));
+const { src, dest, series, parallel, watch } = gulp;
+const browserSync = browserSyncLib.create();
+const sass = gulpSass(dartSass);
 
 
+
+function scripts() {
+    return browserify({
+        entries: './main.js', // Entry point for the bundle
+        transform: [
+            babelify.configure({
+                presets: ['@babel/preset-env'], // Transpile modern JavaScript
+            }),
+        ],
+        debug: true, // Enable inline source maps
+    })
+        .bundle() // Bundle dependencies
+        .on('error', (err) => {
+            console.error('Browserify Error:', err.message); // Log errors
+            this.emit('end');
+        })
+        .pipe(source('bundle.js')) // Convert Browserify output to Vinyl stream
+        .pipe(buffer()) // Convert to a buffered Vinyl file for Gulp plugins
+        .pipe(sourcemaps.init({ loadMaps: true })) // Load inline source maps from Browserify
+        .pipe(uglify()) // Minify JavaScript
+        .pipe(sourcemaps.write('./')) // Write source maps
+        .pipe(dest('./dist/js')); // Save to dist/js
+}
 // Clean the `dist` folder
 function cleanDist() {
-    return src('./dist', { allowEmpty: true }).pipe(clean());
+    return src(['./dist/**/*', '!./dist/assets', '!./dist/assets/**', '!./dist/js', '!./dist/css', '!./dist/js/bundle.js'],{ allowEmpty: true }).pipe(clean({ force: true }));
 }
 
 // Copy and minify HTML files
@@ -42,13 +64,6 @@ function compileAndBundleCSS() {
         .pipe(browserSync.stream());
 }
 
-// Bundle and minify JavaScript files
-function bundleJS() {
-    return src('./*.js',)
-        .pipe(concat('bundle.js')) 
-        .pipe(uglify()) 
-        .pipe(dest('./dist/js')); 
-}
 
 // Copy static assets (e.g., images)
 function copyAssets() {
@@ -83,23 +98,23 @@ function reloadBrowser(cb) {
 function watchFiles() {
     watch('./*.html', series(copyHTML, reloadBrowser)); 
     watch('./*.scss', compileAndBundleCSS);
-    watch('./*.js', series(bundleJS, reloadBrowser));
+    watch('./*.js', series( reloadBrowser));
     watch('./assets/**/*', series(copyAssets, reloadBrowser)); 
 }
+
+
 
 // Build task
 const build = series(
     cleanDist,
-    parallel(copyHTML, compileAndBundleCSS, bundleJS, copyAssets)
+    parallel(copyHTML, compileAndBundleCSS, scripts,  copyAssets)
 );
 
 // Default task to build and start the server
 const _default = series(build, startServer, watchFiles);
-exports.default = _default;
+export default _default;
 
 // Export individual tasks
-exports.build = build;
-exports.cleanDist = cleanDist;
-exports.deploy = deploy;
+export { build, cleanDist, deploy, scripts };
 
 
